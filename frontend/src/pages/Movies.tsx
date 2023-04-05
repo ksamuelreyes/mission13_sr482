@@ -1,8 +1,25 @@
-import MovieData from '../MovieData.json';
-
-const MData = MovieData.MovieData;
-
+import { useEffect, useState } from 'react';
+import { Movie } from '../types/movie';
+import { title } from 'process';
 function MovieList() {
+  const [movieData, setMovieData] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      const rsp = await fetch('https://localhost:4000/Movie');
+      const temp = await rsp.json();
+      const filteredData = temp
+        .filter((Movie: { edited: string }) => Movie.edited === 'Yes')
+        .sort((a: { title: string }, b: { title: string }) =>
+          a.title.localeCompare(b.title),
+        );
+
+      setMovieData(filteredData);
+    };
+
+    fetchMovie();
+  }, []);
+
   return (
     <>
       {/* Header */}
@@ -69,17 +86,21 @@ function MovieList() {
                 <th>Director</th>
                 <th>Rating</th>
                 <th>Edited</th>
+                <th>Lent To</th>
+                <th>Notes</th>
               </tr>
             </thead>
             <tbody>
-              {MData.map((m) => (
+              {movieData.map((m) => (
                 <tr>
-                  <td>{m.Title}</td>
-                  <td>{m.Year}</td>
-                  <td>{m.Category}</td>
-                  <td>{m.Director}</td>
-                  <td>{m.Rating}</td>
-                  <td>{m.Edited}</td>
+                  <td>{m.title}</td>
+                  <td>{m.year}</td>
+                  <td>{m.category}</td>
+                  <td>{m.director}</td>
+                  <td>{m.rating}</td>
+                  <td>{m.edited}</td>
+                  <td>{m.lentTo}</td>
+                  <td>{m.notes}</td>
                 </tr>
               ))}
             </tbody>

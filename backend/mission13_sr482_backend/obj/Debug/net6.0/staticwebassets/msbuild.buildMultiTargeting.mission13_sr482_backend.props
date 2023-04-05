@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\mission13_sr482_backend.props" />
+</Project>
